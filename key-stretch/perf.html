@@ -7,6 +7,9 @@
 
 <body>
     <div>
+        <label for="iterations">Proposed Iterations</label>
+        <input type="text" id="iterations" value="100e3"></input>
+        <br>
         <textarea style="width:500px"
             id="extra-info">Please provide extra info about your device. e.g. iPhone mini 13 or Macbook Pro M2</textarea>
         <br>
@@ -65,7 +68,8 @@
             }
 
 
-            $('raw-results').innerHTML = 'please wait gathering data...'
+            $('raw-results').innerHTML = 'please wait gathering data...';
+            const iterations = parseFloat($('iterations').value);
 
             const suite = new Benchmark.Suite();
             suite
@@ -75,10 +79,10 @@
                         test(1e3).then(function (x) { deferred.resolve() })
                     }
                 })
-                .add("100k Iterations (Proposed)", {
+                .add(iterations + " Iterations (Proposed)", {
                     defer: true,
                     fn: function (deferred) {
-                        test(100e3).then(function (x) { deferred.resolve() })
+                        test(iterations).then(function (x) { deferred.resolve() })
                     }
                 })
                 .on("complete", function () {
