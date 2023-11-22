@@ -16,7 +16,9 @@
     const NAMESPACE = "identity.foo.com/picl/v1/";
     const email = "foo@bar.com";
     const password = "U5kfnign4VYTtV7";
-    const encoder = () => new TextEncoder();
+    const encoder = function () {
+        return new TextEncoder();
+    }
 
 
     async function test(iterations) {
