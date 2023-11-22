@@ -92,9 +92,9 @@
                     const meanDelta = (result["1"].stats.mean - result["0"].stats.mean)
 
                     $('raw-results').innerHTML = JSON.stringify({
-                        meanDelta,
-                        deviceInfo,
-                        result
+                        meanDelta: meanDelta,
+                        deviceInfo: deviceInfo,
+                        result: result
                     }, null, ' ')
                 })
                 .run({});
