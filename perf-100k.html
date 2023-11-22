@@ -70,13 +70,13 @@
     .add("1K Iterations (Current)", {
     defer: true,
     fn: function(deferred) {
-    test(1e3).then(x => deferred.resolve())
+    test(1e3).then(function(x) { deferred.resolve() })
     }
     })
     .add("100k Iterations (Proposed)", {
     defer: true,
     fn: function(deferred) {
-    test(100e3).then(x => deferred.resolve())
+    test(100e3).then(function(x) { deferred.resolve() })
     }
     })
     .on("complete", function() {
