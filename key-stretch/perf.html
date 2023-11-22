@@ -77,13 +77,13 @@
 
             const suite = new Benchmark.Suite();
             suite
-                .add(curIterations + " Iterations (Current)", {
+                .add("Iterations: " + curIterations + " (Current)", {
                     defer: true,
                     fn: function (deferred) {
                         test(curIterations).then(function (x) { deferred.resolve() })
                     }
                 })
-                .add(newIterations + " Iterations (Proposed)", {
+                .add("Iterations: " + newIterations + " (Proposed)", {
                     defer: true,
                     fn: function (deferred) {
                         test(newIterations).then(function (x) { deferred.resolve() })
