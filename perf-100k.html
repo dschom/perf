@@ -25,28 +25,23 @@
 
 
         function test(iterations) {
-            return new Promise(function (resolve) {
-                crypto.subtle.importKey(
-                    "raw",
-                    encoder().encode(password),
-                    "PBKDF2",
-                    false,
-                    ["deriveBits"]
-                ).then( function (passKey) {
-                     return crypto.subtle.deriveBits({
-                        name: "PBKDF2",
-                        salt: encoder().encode(`${NAMESPACE}quickStretch:${email}`),
-                        iterations: iterations,
-                        hash: "SHA-256",
-                    },
-                        passkey,
-                        256
-                    );
-                }).then(function (quickStretchRaw) {
-                    resolve(quickStretchRaw);
-                });
-            })
-
+            return crypto.subtle.importKey(
+                "raw",
+                encoder().encode(password),
+                "PBKDF2",
+                false,
+                ["deriveBits"]
+            ).then(function (passKey) {
+                return crypto.subtle.deriveBits({
+                    name: "PBKDF2",
+                    salt: encoder().encode(`${NAMESPACE}quickStretch:${email}`),
+                    iterations: iterations,
+                    hash: "SHA-256",
+                },
+                    passkey,
+                    256
+                );
+            });
         }
 
         function $(id) {
