@@ -72,21 +72,19 @@
 
 
             $('raw-results').innerHTML = 'please wait gathering data...';
-            const curIterations = parseFloat($('curIterations').value);
-            const proposedIterations = parseFloat($('proposedIterations').value);
 
             const suite = new Benchmark.Suite();
             suite
-                .add("Iterations: " + curIterations + " (Current)", {
+                .add("Iterations: " + parseFloat($('curIterations').value) + " (Current)", {
                     defer: true,
                     fn: function (deferred) {
-                        test(curIterations).then(function (x) { deferred.resolve() })
+                        test(parseFloat($('curIterations').value)).then(function (x) { deferred.resolve() })
                     }
                 })
-                .add("Iterations: " + proposedIterations + " (Proposed)", {
+                .add("Iterations: " + parseFloat($('proposedIterations').value) + " (Proposed)", {
                     defer: true,
                     fn: function (deferred) {
-                        test(proposedIterations).then(function (x) { deferred.resolve() })
+                        test(parseFloat($('proposedIterations').value)).then(function (x) { deferred.resolve() })
                     }
                 })
                 .on("complete", function () {
