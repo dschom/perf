@@ -32,7 +32,7 @@
             ).then(function (passkey) {
                 return crypto.subtle.deriveBits({
                     name: "PBKDF2",
-                    salt: encoder().encode(`${NAMESPACE}quickStretch:${email}`),
+                    salt: encoder().encode(NAMESPACE + 'quickStretch:' + email),
                     iterations: iterations,
                     hash: "SHA-256",
                 },
