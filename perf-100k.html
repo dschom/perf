@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/benchmark/1.0.0/benchmark.min.js" ></script>
+    </head>
+    <body>
+    <div>
+        <textarea style="width:500px" id="extra-info">Please provide extra info about your device. e.g. iPhone mini 13 or Macbook Pro M2</textarea>
+        <br>
+        <button id="run" onclick="run()" >RUN BENCHMARK</button>
+        <button id="copy" onclick="copyToClipboard()">COPY RESULTS</button>
+        </button>
+        <pre id="raw-results"></pre>
+    </div>
+    <script type="text/javascript">
+    const NAMESPACE = "identity.foo.com/picl/v1/";
+    const email = "foo@bar.com";
+    const password = "U5kfnign4VYTtV7";
+    const encoder = () => new TextEncoder();
+
+
+    async function test(iterations) {
+    const passkey = await crypto.subtle.importKey(
+    "raw",
+    encoder().encode(password),
+    "PBKDF2",
+    false,
+    ["deriveBits"]
+    );
+    const quickStretchRaw = await crypto.subtle.deriveBits({
+    name: "PBKDF2",
+    salt: encoder().encode(`${NAMESPACE}quickStretch:${email}`),
+    iterations: iterations,
+    hash: "SHA-256",
+    },
+    passkey,
+    256
+    );
+
+    return quickStretchRaw;
+    }
+
+    function $(id) {
+    return document.getElementById(id);
+    }
+
+    function copyToClipboard() {
+    var x = document.createElement("input");
+    x.setAttribute("value", $('raw-results').textContent);
+    document.body.appendChild(x);
+    x.select();
+    document.execCommand("copy");
+    document.body.removeChild(x);
+    }
+
+    function run() {
+
+    if (/^Please/.test($('extra-info').value)) {
+    alert('Provide info about your device!');
+    return;
+    }
+
+
+    $('raw-results').innerHTML = 'please wait gathering data...'
+
+    const suite = new Benchmark.Suite();
+    suite
+    .add("1K Iterations (Current)", {
+    defer: true,
+    fn: function(deferred) {
+    test(1e3).then(x => deferred.resolve())
+    }
+    })
+    .add("100k Iterations (Proposed)", {
+    defer: true,
+    fn: function(deferred) {
+    test(100e3).then(x => deferred.resolve())
+    }
+    })
+    .on("complete", function() {
+    const result = JSON.parse(JSON.stringify(this));
+    const deviceInfo = {
+    platform: navigator.platform,
+    ua: navigator.userAgent,
+    oscpu: navigator.oscpu,
+    extraInfoProvidedByUser: $('extra-info').value
+    }
+    const meanDelta = (result["1"].stats.mean - result["0"].stats.mean)
+
+    $('raw-results').innerHTML = JSON.stringify({
+    meanDelta,
+    deviceInfo,
+    result
+    }, null, ' ')
+    })
+    .run({});
+    }
+
+    </script>
+
+    </body>
+</html>
