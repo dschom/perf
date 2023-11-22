@@ -7,11 +7,11 @@
 
 <body>
     <div>
-        <label for="iterations">Current Iterations</label>
-        <input type="text" id="curIterations" value="100e3"></input>
+        <label for="curIterations">Current Iterations</label>
+        <input type="text" id="curIterations" value="1e3"></input>
         <br>
-        <label for="iterations">Proposed Iterations</label>
-        <input type="text" id="newIterations" value="100e3"></input>
+        <label for="newIterations">Proposed Iterations</label>
+        <input type="text" id="proposedIterations" value="100e3"></input>
         <br>
         <textarea style="width:500px"
             id="extra-info">Please provide extra info about your device. e.g. iPhone mini 13 or Macbook Pro M2</textarea>
@@ -30,7 +30,7 @@
         }
 
 
-        function test(iterations) {
+        function test(count) {
             return crypto.subtle.importKey(
                 "raw",
                 encoder().encode(password),
@@ -41,7 +41,7 @@
                 return crypto.subtle.deriveBits({
                     name: "PBKDF2",
                     salt: encoder().encode(NAMESPACE + 'quickStretch:' + email),
-                    iterations: iterations,
+                    iterations: count,
                     hash: "SHA-256",
                 },
                     passkey,
@@ -73,7 +73,7 @@
 
             $('raw-results').innerHTML = 'please wait gathering data...';
             const curIterations = parseFloat($('curIterations').value);
-            const newIterations = parseFloat($('newIterations').value);
+            const proposedIterations = parseFloat($('proposedIterations').value);
 
             const suite = new Benchmark.Suite();
             suite
@@ -83,10 +83,10 @@
                         test(curIterations).then(function (x) { deferred.resolve() })
                     }
                 })
-                .add("Iterations: " + newIterations + " (Proposed)", {
+                .add("Iterations: " + proposedIterations + " (Proposed)", {
                     defer: true,
                     fn: function (deferred) {
-                        test(newIterations).then(function (x) { deferred.resolve() })
+                        test(proposedIterations).then(function (x) { deferred.resolve() })
                     }
                 })
                 .on("complete", function () {
