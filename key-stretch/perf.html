@@ -7,8 +7,11 @@
 
 <body>
     <div>
+        <label for="iterations">Current Iterations</label>
+        <input type="text" id="curIterations" value="100e3"></input>
+        <br>
         <label for="iterations">Proposed Iterations</label>
-        <input type="text" id="iterations" value="100e3"></input>
+        <input type="text" id="newIterations" value="100e3"></input>
         <br>
         <textarea style="width:500px"
             id="extra-info">Please provide extra info about your device. e.g. iPhone mini 13 or Macbook Pro M2</textarea>
@@ -69,20 +72,21 @@
 
 
             $('raw-results').innerHTML = 'please wait gathering data...';
-            const iterations = parseFloat($('iterations').value);
+            const curIterations = parseFloat($('curIterations').value);
+            const newIterations = parseFloat($('newIterations').value);
 
             const suite = new Benchmark.Suite();
             suite
-                .add("1K Iterations (Current)", {
+                .add(curIterations + " Iterations (Current)", {
                     defer: true,
                     fn: function (deferred) {
-                        test(1e3).then(function (x) { deferred.resolve() })
+                        test(curIterations).then(function (x) { deferred.resolve() })
                     }
                 })
-                .add(iterations + " Iterations (Proposed)", {
+                .add(newIterations + " Iterations (Proposed)", {
                     defer: true,
                     fn: function (deferred) {
-                        test(iterations).then(function (x) { deferred.resolve() })
+                        test(newIterations).then(function (x) { deferred.resolve() })
                     }
                 })
                 .on("complete", function () {
